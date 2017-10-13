@@ -37,7 +37,7 @@ Distributed systems, shrunk to the REPL.
 ## Zookeeper
 
 ```clojure
-(require '[troy-west.thimble.zk :as zk])
+(require '[troy-west.thimble.zookeeper :as zk])
 => nil
 
 (def zookeeper (zk/start))
