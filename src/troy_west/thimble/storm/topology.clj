@@ -37,7 +37,7 @@
                          [state tuples _]
                          (let [{:keys [cassandra]} state]
                            (doseq [event (map #(parse-event (trident/get % value-field)) tuples)]
-                             (arche/execute cassandra :demo/insert-talk {:values event}))))
+                             (arche/execute cassandra :talk/insert {:values event}))))
 
 (defn ->spout
   [address topic]

@@ -4,8 +4,10 @@ Distributed systems, shrunk to the REPL.
 
 The script below demonstrates the following
  - start a range of distributed services from the REPL
- - send data to cassandra
- and sending data through them all.
+ - send / read data to cassandra
+ - send more data to kafka
+ - have that data processed by storm and written to cassandra
+ - read that data back from cassandra
 
 ## Usage
 
