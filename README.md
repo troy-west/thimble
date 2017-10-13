@@ -4,6 +4,7 @@ Distributed systems, shrunk to the REPL.
 
 ## Usage
 
+## Cassandra Interop (requires [CCM-CLJ](https://github.com/SMX-LTD/ccm-clj))
 ```clojure
 (cassandra/start-cluster)
 => nil
