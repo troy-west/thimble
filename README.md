@@ -10,7 +10,6 @@ Start Cassandra and insert / select data
 
 ```clojure
 (require '[troy-west.thimble.cassandra :as cassandra])
-=> nil
 
 (cassandra/start-cluster)
 => nil
@@ -43,7 +42,6 @@ Start Zookeeper (require for later services)
 
 ```clojure
 (require '[troy-west.thimble.zookeeper :as zk])
-=> nil
 
 (def zookeeper (zk/start))
 =>
@@ -56,7 +54,6 @@ Start Kafka and sent a message to the broker
 
 ```clojure
 (require '[troy-west.thimble.kafka :as kafka])
-=> nil
 
 (def server (kafka/start zookeeper))
 => #'user/server
@@ -74,7 +71,6 @@ Start storm, process events from the prior Kafka topic
 
 ```clojure
 (require '[troy-west.thimble.storm :as storm ])
-=> nil
 
 (def cluster (storm/start zookeeper))
 =>
