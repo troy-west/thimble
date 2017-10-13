@@ -52,10 +52,10 @@ Distributed systems, shrunk to the REPL.
 => nil
 
 (def server (kafka/start zookeeper))
-=> #'user/kafka-server
+=> #'user/server
 
 (def producer (kafka/producer server))
-=> #'user/kafka-producer
+=> #'user/producer
 
 (kafka/send-message kafka-producer "scaling" 11)
 ```
