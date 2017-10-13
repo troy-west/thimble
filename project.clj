@@ -13,4 +13,5 @@
                  [org.apache.storm/storm-kafka "1.1.1"]
                  [yieldbot/marceline "0.3.1-SNAPSHOT"]
                  [com.troy-west/arche "0.2.2"]
-                 [cheshire "5.8.0"]])
+                 [cheshire "5.8.0"]]
+  :init-ns [user])

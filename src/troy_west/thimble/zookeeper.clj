@@ -1,4 +1,4 @@
-(ns troy-west.thimble.zk
+(ns troy-west.thimble.zookeeper
   (:import (java.util Properties)
            (org.apache.zookeeper.server ServerConfig ZooKeeperServerMain)
            (org.apache.zookeeper.server.quorum QuorumPeerConfig)

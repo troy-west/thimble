@@ -1,5 +1,5 @@
 (ns troy-west.thimble.kafka
-  (:require [troy-west.thimble.zk :as zk]
+  (:require [troy-west.thimble.zookeeper :as zk]
             [cheshire.core :as json])
   (:import (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.common.serialization StringSerializer)
