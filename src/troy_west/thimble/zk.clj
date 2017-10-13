@@ -17,19 +17,20 @@
   [properties]
   (let [quorum-config (QuorumPeerConfig.)]
     (.parseProperties quorum-config properties)
-    properties))
+    quorum-config))
 
 (defn server-config
   [quorum-config]
   (let [server-config (ServerConfig.)]
-    (.readFrom server-config quorum-config)))
+    (.readFrom server-config quorum-config)
+    server-config))
 
-(defn start!
+(defn start
   ([]
-   (start! {"tickTime"          "2000"
-            "clientPortaddress" "127.0.0.1"
-            "clientPort"        "2181"
-            "dataDir"           "target/zookeeper-data"}))
+   (start {"tickTime"          "2000"
+           "clientPortaddress" "127.0.0.1"
+           "clientPort"        "2181"
+           "dataDir"           "target/zookeeper-data"}))
   ([config]
    (let [config (-> config properties quorum-config server-config)
          server (ZooKeeperServerMain.)]
