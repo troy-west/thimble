@@ -14,6 +14,19 @@ Distributed systems, shrunk to the REPL.
 (def conn (cassandra/connection))
 => #'user/conn
 
+conn
+=>
+{:session #object[com.datastax.driver.core.SessionManager 0x25d94779 "com.datastax.driver.core.SessionManager@25d94779"],
+ :statements #:demo{:select-talk {:cql "SELECT * FROM talk WHERE id = :id",
+                                  :prepared #object[com.datastax.driver.core.DefaultPreparedStatement
+                                                    0x5d2d0de2
+                                                    "com.datastax.driver.core.DefaultPreparedStatement@5d2d0de2"]},
+                    :insert-talk {:cql "INSERT INTO talk (id, rating, date) VALUES (:id, :rating, :date)",
+                                  :prepared #object[com.datastax.driver.core.DefaultPreparedStatement
+                                                    0x1f7fc5f9
+                                                    "com.datastax.driver.core.DefaultPreparedStatement@1f7fc5f9"]}},
+ :udt-encoders {}}
+
 (cassandra/select-talk conn "keynote")
 => ()
 
@@ -38,12 +51,19 @@ Distributed systems, shrunk to the REPL.
 ```clojure
 (require '[troy-west.thimble.zk :as zk])
 
-(zk/start)
+(def zookeeper (zk/start))
 =>
-{:config #object[org.apache.zookeeper.server.ServerConfig 0xe2c302e "org.apache.zookeeper.server.ServerConfig@e2c302e"],
+#'user/zookeeper
+
+zookeeper
+=>
+{:config #object[org.apache.zookeeper.server.ServerConfig
+                 0x58c2a7a0
+                 "org.apache.zookeeper.server.ServerConfig@58c2a7a0"],
  :server #object[org.apache.zookeeper.server.ZooKeeperServerMain
-                 0x5b0ab9a8
-                 "org.apache.zookeeper.server.ZooKeeperServerMain@5b0ab9a8"]}
+                 0x1dc022dc
+                 "org.apache.zookeeper.server.ZooKeeperServerMain@1dc022dc"]}
+
 ```
 
 ## License

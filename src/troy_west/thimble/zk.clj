@@ -1,7 +1,8 @@
 (ns troy-west.thimble.zk
   (:import (java.util Properties)
            (org.apache.zookeeper.server ServerConfig ZooKeeperServerMain)
-           (org.apache.zookeeper.server.quorum QuorumPeerConfig)))
+           (org.apache.zookeeper.server.quorum QuorumPeerConfig)
+           (java.net InetSocketAddress)))
 
 (defn properties
   [config]
@@ -14,16 +15,21 @@
     props))
 
 (defn quorum-config
-  [properties]
+  [^Properties properties]
   (let [quorum-config (QuorumPeerConfig.)]
     (.parseProperties quorum-config properties)
     quorum-config))
 
 (defn server-config
-  [quorum-config]
+  [^QuorumPeerConfig quorum-config]
   (let [server-config (ServerConfig.)]
     (.readFrom server-config quorum-config)
     server-config))
+
+(defn server-address
+  [^ServerConfig server-config]
+  (let [^InetSocketAddress address (.getClientPortAddress server-config)]
+    (str (.getHostString address) ":" (.getPort address))))
 
 (defn start
   ([]
