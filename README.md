@@ -67,7 +67,6 @@ Distributed systems, shrunk to the REPL.
 (require '[troy-west.thimble.storm :as storm ])
 => nil
 
-
 (def cluster (storm/start zookeeper))
 ```
 
