@@ -5,6 +5,9 @@ Distributed systems, shrunk to the REPL.
 ## Usage
 
 ## Cassandra (requires [CCM-CLJ](https://github.com/SMX-LTD/ccm-clj))
+
+Start Cassandra and insert / select data
+
 ```clojure
 (require '[troy-west.thimble.cassandra :as cassandra])
 => nil
@@ -36,6 +39,8 @@ Distributed systems, shrunk to the REPL.
 
 ## Zookeeper
 
+Start Zookeeper (require for later services)
+
 ```clojure
 (require '[troy-west.thimble.zookeeper :as zk])
 => nil
@@ -46,6 +51,8 @@ Distributed systems, shrunk to the REPL.
 ```
 
 ## Kafka
+
+Start Kafka and sent a message to the broker
 
 ```clojure
 (require '[troy-west.thimble.kafka :as kafka])
@@ -63,11 +70,16 @@ Distributed systems, shrunk to the REPL.
 
 ## Storm
 
+Start storm, process events from the prior Kafka topic
+
 ```clojure
 (require '[troy-west.thimble.storm :as storm ])
 => nil
 
 (def cluster (storm/start zookeeper))
+=>
+
+(storm/deploy-topology cluster zookeeper)
 ```
 
 ## License

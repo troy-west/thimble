@@ -14,4 +14,5 @@
                  [yieldbot/marceline "0.3.1-SNAPSHOT"]
                  [com.troy-west/arche "0.2.2"]
                  [cheshire "5.8.0"]]
-  :init-ns [user])
+  :init-ns [user]
+  :aot [troy-west.thimble.storm.topology troy-west.thimble.storm.state])
