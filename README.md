@@ -61,6 +61,15 @@ Distributed systems, shrunk to the REPL.
 =>
 ```
 
+## Storm
+
+```clojure
+(require '[troy-west.thimble.storm :as storm ])
+=> nil
+
+
+(def cluster (storm/start zookeeper))
+```
 
 ## License
 

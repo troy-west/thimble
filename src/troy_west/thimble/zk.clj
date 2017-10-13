@@ -26,10 +26,17 @@
     (.readFrom server-config quorum-config)
     server-config))
 
+(defn server-host
+  [server-config]
+  (.getHostString (.getClientPortAddress server-config)))
+
+(defn server-port
+  [server-config]
+  (long (.getPort (.getClientPortAddress server-config))))
+
 (defn server-address
   [server-config]
-  (let [^InetSocketAddress address (.getClientPortAddress server-config)]
-    (str (.getHostString address) ":" (.getPort address))))
+  (str (server-host server-config) ":" (server-port server-config)))
 
 (defn start
   ([]
