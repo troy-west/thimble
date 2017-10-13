@@ -15,19 +15,19 @@
     props))
 
 (defn quorum-config
-  [^Properties properties]
+  [properties]
   (let [quorum-config (QuorumPeerConfig.)]
     (.parseProperties quorum-config properties)
     quorum-config))
 
 (defn server-config
-  [^QuorumPeerConfig quorum-config]
+  [quorum-config]
   (let [server-config (ServerConfig.)]
     (.readFrom server-config quorum-config)
     server-config))
 
 (defn server-address
-  [^ServerConfig server-config]
+  [server-config]
   (let [^InetSocketAddress address (.getClientPortAddress server-config)]
     (str (.getHostString address) ":" (.getPort address))))
 

@@ -22,16 +22,16 @@
                                :port           19142})]
     (arche/connect cluster
                    {:keyspace   "sandbox"
-                    :statements {:demo/select-talk "SELECT * FROM talk WHERE id = :id"
-                                 :demo/insert-talk "INSERT INTO talk (id, rating, date) VALUES (:id, :rating, :date)"}})))
+                    :statements {:talk/select "SELECT * FROM talk WHERE id = :id"
+                                 :talk/insert "INSERT INTO talk (id, rating, date) VALUES (:id, :rating, :date)"}})))
 (defn insert-talk
   [conn id rating]
   (arche/execute conn
-                 :demo/insert-talk
+                 :talk/insert
                  {:values {:id     id
                            :rating (int rating)
                            :date   (Date.)}}))
 
 (defn select-talk
   [conn id]
-  (arche/execute conn :demo/select-talk {:values {:id id}}))
+  (arche/execute conn :talk/select {:values {:id id}}))
