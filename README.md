@@ -57,7 +57,8 @@ Distributed systems, shrunk to the REPL.
 (def producer (kafka/producer server))
 => #'user/producer
 
-(kafka/send-message kafka-producer "scaling" 11)
+(kafka/send-message producer "scaling" 11)
+=>
 ```
 
 
