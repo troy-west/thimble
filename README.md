@@ -2,8 +2,21 @@
 
 Distributed systems, shrunk to the REPL.
 
+The script below demonstrates the following
+ - start a range of distributed services from the REPL
+ - send data to cassandra
+ and sending data through them all.
+
 ## Usage
 
+## Setup
+
+Currently must clean up any stale zookeeper / kafka state
+
+```bash
+rm -rf target/zookeeper-data
+rm -rf target/kafka-logs
+```
 ## Cassandra (requires [CCM-CLJ](https://github.com/SMX-LTD/ccm-clj))
 
 Start Cassandra and insert / select data

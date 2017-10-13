@@ -1,6 +1,5 @@
 (ns troy-west.thimble.storm.topology
-  (:require [clojure.tools.logging :as log]
-            [marceline.storm.trident :as trident]
+  (:require [marceline.storm.trident :as trident]
             [troy-west.thimble.storm.state :as state]
             [troy-west.arche :as arche]
             [cheshire.core :as json])
@@ -37,12 +36,8 @@
 (trident/defstateupdater digest
                          [state tuples _]
                          (let [{:keys [cassandra]} state]
-                           (try
-                             (doseq [event (map #(parse-event (trident/get % value-field)) tuples)]
-                               (arche/execute cassandra :demo/insert-talk {:values event}))
-
-                             (catch Throwable thr
-                               (log/error thr "trident batch digest runtime exception" (ex-data thr))))))
+                           (doseq [event (map #(parse-event (trident/get % value-field)) tuples)]
+                             (arche/execute cassandra :demo/insert-talk {:values event}))))
 
 (defn ->spout
   [address topic]
