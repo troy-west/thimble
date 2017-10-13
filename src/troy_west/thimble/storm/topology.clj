@@ -3,13 +3,13 @@
             [troy-west.thimble.storm.state :as state]
             [troy-west.arche :as arche]
             [cheshire.core :as json])
-  (:import java.nio.charset.Charset
-           [org.apache.storm.kafka.trident OpaqueTridentKafkaSpout TridentKafkaConfig]
-           org.apache.storm.kafka.ZkHosts
-           [org.apache.storm.spout Scheme SchemeAsMultiScheme]
-           org.apache.storm.StormSubmitter
-           org.apache.storm.trident.TridentTopology
-           org.apache.storm.tuple.Fields)
+  (:import (java.util Date)
+           (org.apache.storm.trident TridentTopology)
+           (org.apache.storm.kafka.trident OpaqueTridentKafkaSpout TridentKafkaConfig)
+           (org.apache.storm.spout SchemeAsMultiScheme Scheme)
+           (org.apache.storm.kafka ZkHosts)
+           (org.apache.storm.tuple Fields)
+           (java.nio.charset Charset))
   (:gen-class))
 
 (def ^:const value-field "kafka-value")
@@ -37,7 +37,7 @@
                          [state tuples _]
                          (let [{:keys [cassandra]} state]
                            (doseq [event (map #(parse-event (trident/get % value-field)) tuples)]
-                             (arche/execute cassandra :talk/insert {:values event}))))
+                             (arche/execute cassandra :talk/insert {:values (assoc event :date (Date.))}))))
 
 (defn ->spout
   [address topic]
