@@ -2,23 +2,35 @@
 
 Distributed systems, shrunk to the REPL.
 
-The script below demonstrates the following
+The script below demonstrates the following multi-system data flow
+
  - start a range of distributed services from the REPL
- - send / read data to cassandra
- - send more data to kafka
- - have that data processed by storm and written to cassandra
+ - send data to kafka
+ - have that data processed by storm (kafka streams / onyx to follow shortly)
  - read that data back from cassandra
 
+Default settings:
+
+ - 12 Kafka partitions
+ - 3 Storm workers
+ 
 ## Usage
 
 ## Setup
 
+Install CCM-CLJ and manually create the first cluster (can do from the REPL, simpler this way..)
+
+```bash
+# ccm create -n 3 -v 2.0.14 thimble
+```
+
 Currently must clean up any stale zookeeper / kafka state
 
 ```bash
-rm -rf target/zookeeper-data
-rm -rf target/kafka-logs
+# rm -rf target/zookeeper-data
+# rm -rf target/kafka-logs
 ```
+
 ## Cassandra (requires [CCM-CLJ](https://github.com/SMX-LTD/ccm-clj))
 
 Start Cassandra and insert / select data
@@ -32,16 +44,16 @@ Start Cassandra and insert / select data
 (def conn (cassandra/connection))
 => #'user/conn
 
-(cassandra/select-talk conn "keynote")
+(talk/select conn "keyspace")
 => ()
 
-(cassandra/insert-talk conn "keynote" 9)
+(talk/insert conn "keynote" 9)
 => ()
 
-(cassandra/insert-talk conn "keynote" 8)
+(talk/insert conn "keynote" 8)
 => ()
 
-(cassandra/insert-talk conn "keynote" 9)
+(talk/insert conn "keynote" 9)
 => ()
 
 (cassandra/select-talk conn "keynote")
@@ -91,6 +103,13 @@ Start storm, process events from the prior Kafka topic
 =>
 
 (storm/deploy-topology cluster zookeeper)
+```
+
+## Confirm 
+
+```clojure
+(talk/select conn "scaling")
+=> ({:id "scaling", :rating 11, :date #inst"2017-10-13T22:43:55.897-00:00"})
 ```
 
 ## License

@@ -1,6 +1,7 @@
 (ns troy-west.thimble.cassandra
   (:require [ccm-clj.core :as ccm]
             [troy-west.arche :as arche]
+            [troy-west.thimble.talk :as talk]
             [qbits.alia :as alia])
   (:import (java.util Date)))
 
@@ -13,7 +14,7 @@
                      "2.0.14"
                      3
                      [#"schema/keyspace\.cql"]
-                     {"sandbox" [#"schema/talks\.cql"]}
+                     {"sandbox" [#"schema/tables\.cql"]}
                      {:cql 19142}))
 
 (defn connection
@@ -22,16 +23,4 @@
                                :port           19142})]
     (arche/connect cluster
                    {:keyspace   "sandbox"
-                    :statements {:talk/select "SELECT * FROM talk WHERE id = :id"
-                                 :talk/insert "INSERT INTO talk (id, rating, date) VALUES (:id, :rating, :date)"}})))
-(defn insert-talk
-  [conn id rating]
-  (arche/execute conn
-                 :talk/insert
-                 {:values {:id     id
-                           :rating (int rating)
-                           :date   (Date.)}}))
-
-(defn select-talk
-  [conn id]
-  (arche/execute conn :talk/select {:values {:id id}}))
+                    :statements talk/statements})))

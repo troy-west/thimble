@@ -2,7 +2,8 @@
   (:require [marceline.storm.trident :as trident]
             [troy-west.thimble.storm.state :as state]
             [troy-west.arche :as arche]
-            [cheshire.core :as json])
+            [cheshire.core :as json]
+            [troy-west.thimble.talk :as talk])
   (:import (java.util Date)
            (org.apache.storm.trident TridentTopology)
            (org.apache.storm.kafka.trident OpaqueTridentKafkaSpout TridentKafkaConfig)
@@ -31,13 +32,15 @@
 
 (defn parse-event
   [buffer]
-  (json/decode (str (.decode (.newDecoder charset-utf8) buffer))))
+  (json/decode (str (.decode (.newDecoder charset-utf8) buffer)) true))
 
 (trident/defstateupdater digest
                          [state tuples _]
                          (let [{:keys [cassandra]} state]
-                           (doseq [event (map #(parse-event (trident/get % value-field)) tuples)]
-                             (arche/execute cassandra :talk/insert {:values (assoc event :date (Date.))}))))
+                           (doseq [{:keys [id rating] :as appraisal} (map #(parse-event (trident/get % value-field)) tuples)]
+                             (prn id rating appraisal cassandra)
+                             (when appraisal
+                               (talk/insert cassandra id rating)))))
 
 (defn ->spout
   [address topic]
