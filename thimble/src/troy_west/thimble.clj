@@ -16,5 +16,4 @@
   (init config))
 
 (defmethod ig/halt-key! :thimble/platform
-  [_ _]
-  )
+  [_ _])
