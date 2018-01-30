@@ -1,17 +1,64 @@
-(defproject com.troy-west/thimble "0.0.1-SNAPSHOT"
-  :description "Distributed systems in your pocket"
-  :dependencies [[org.clojure/clojure "1.9.0-alpha20"]
-                 [org.clojure/core.async "0.3.443"]
-                 [org.clojure/tools.logging "0.3.1"]
-                 [com.smxemail/ccm-clj "1.1.0" :exclusions [org.clojure/tools.logging]]
-                 [org.apache.kafka/kafka_2.11 "0.11.0.1" :exclusions [org.apache.zookeeper/zookeeper org.slf4j/slf4j-log4j12 log4j/log4j org.slf4j/slf4j-simple org.jboss.netty/netty]]
-                 [org.apache.kafka/kafka-clients "0.11.0.1" :exclusions [org.apache.zookeeper/zookeeper org.slf4j/slf4j-log4j12 log4j/log4j org.slf4j/slf4j-simple org.jboss.netty/netty]]
-                 [org.apache.zookeeper/zookeeper "3.4.10" :exclusions [org.slf4j/slf4j-log4j12 log4j/log4j org.slf4j/slf4j-simple org.jboss.netty/netty]]
-                 [org.apache.storm/storm-core "1.1.1" :exclusions [org.apache.zookeeper/zookeeper]]
-                 [org.apache.storm/storm-kafka "1.1.1"]
-                 [yieldbot/marceline "0.3.1-SNAPSHOT"]
-                 [com.troy-west/arche "0.2.2"]
-                 [cheshire "5.8.0"]]
-  :init-ns [user]
-  :aot [troy-west.thimble.storm.topology
-        troy-west.thimble.storm.state])
+(defproject com.troy-west/thimble-all "0.1.0-SNAPSHOT"
+  :description "Pip: A Clojure toolkit for testing Streaming Data Platforms"
+
+  :url "http://www.troy-west.com/pip"
+
+  :license {:name "Eclipse Public License"
+            :url  "http://www.eclipse.org/legal/epl-v10.html"}
+
+  :plugins [[lein-modules "0.3.11"]
+            [lein-cljfmt "0.5.7" :exclusions [org.clojure/clojure]]
+            [jonase/eastwood "0.2.5" :exclusions [org.clojure/clojure]]
+            [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
+
+  :dependencies [[org.clojure/clojure "_"]
+                 [com.troy-west/thimble-zookeeper "_"]
+                 [com.troy-west/thimble-kafka "_"]
+                 [com.troy-west/thimble-cassandra "_"]
+                 [com.troy-west/thimble-storm "-"]]
+
+  :profiles {:dev {:resource-paths ["test-resources"]
+                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
+
+  :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
+                                              [integrant "_"]]
+
+                        :subprocess          nil
+
+                        :deploy-repositories [["releases" {:url "https://clojars.org/repo/" :creds :gpg}]]
+
+                        :aliases             {"puff" ["do" ["clean"] ["install"] ["deps"] ["check"] ["test"] ["kibit"] ["cljfmt" "check"]]}
+
+                        :eastwood            {:add-linters [:unused-fn-args
+                                                            :unused-locals
+                                                            :unused-namespaces
+                                                            :unused-private-vars]
+                                              :namespaces  [:source-paths]}}
+
+            :versions  {org.clojure/clojure           "1.9.0"
+                        integrant  		      "0.6.3"
+                        com.troy-west/thimble-zookeeper    :version
+                        com.troy-west/thimble-kafka :version
+                        com.troy-west/thimble-cassandra :version
+                        com.troy-west/thimble-storm     :version}}
+
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["modules" "change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]
+                  ["modules" "deploy"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["modules" "change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]]
+
+  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"] ["cljfmt" "check"]]}
+
+  :eastwood {:add-linters [:unused-fn-args
+                           :unused-locals
+                           :unused-namespaces
+                           :unused-private-vars]
+             :namespaces  [:source-paths]}
+
+  :pedantic? :ranges)
