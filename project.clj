@@ -1,7 +1,7 @@
 (defproject com.troy-west/thimble-all "0.1.0-SNAPSHOT"
-  :description "Pip: A Clojure toolkit for testing Streaming Data Platforms"
+  :description "Thimble: A Clojure toolkit for testing Streaming Data Platforms"
 
-  :url "http://www.troy-west.com/pip"
+  :url "http://www.troy-west.com/thimble"
 
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
@@ -12,10 +12,10 @@
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
   :dependencies [[org.clojure/clojure "_"]
-                 [com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
+                 [com.troy-west/thimble-storm "-"]
                  [com.troy-west/thimble-cassandra "_"]
-                 [com.troy-west/thimble-storm "-"]]
+                 [com.troy-west/thimble-zookeeper "_"]]
 
   :profiles {:dev {:resource-paths ["test-resources"]
                    :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
@@ -35,12 +35,12 @@
                                                             :unused-private-vars]
                                               :namespaces  [:source-paths]}}
 
-            :versions  {org.clojure/clojure           "1.9.0"
-                        integrant  		      "0.6.3"
-                        com.troy-west/thimble-zookeeper    :version
-                        com.troy-west/thimble-kafka :version
+            :versions  {org.clojure/clojure             "1.9.0"
+                        integrant                       "0.6.3"
+                        com.troy-west/thimble-kafka     :version
+                        com.troy-west/thimble-storm     :version
                         com.troy-west/thimble-cassandra :version
-                        com.troy-west/thimble-storm     :version}}
+                        com.troy-west/thimble-zookeeper :version}}
 
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
