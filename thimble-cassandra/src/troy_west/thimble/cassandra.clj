@@ -1,16 +1,33 @@
 (ns troy-west.thimble.cassandra
-  (:require [ccm-clj.core :as ccm]
-            [troy-west.arche :as arche]
-            [qbits.alia :as alia]))
+  (:require [clojure.java.io :as io]
+            [ccm-clj.core :as ccm]
+            [integrant.core :as ig]))
 
-;; Prior to running this, install ccm-clj (https://github.com/SMX-LTD/ccm-clj) and run:
-;;   # ccm create -n 3 -v 2.0.14 thimble
+(def default-config {:name         "thimble"
+                     :version      "3.0.15"
+                     :nodes        3
+                     :port         19142
+                     :keyspace     "sandbox"
+                     :keyspace-cql "schema/sandbox-keyspace.cql"})
 
 (defn start-cluster
-  []
-  (ccm/auto-cluster! "thimble"
-                     "2.0.14"
-                     3
-                     [#"schema/keyspace\.cql"]
-                     {"sandbox" [#"schema/tables\.cql"]}
-                     {:cql 19142}))
+  [config]
+  (let [config (merge default-config config)
+        {:keys [name version nodes port keyspace keyspace-cql schema-cqls]} config]
+    (ccm/stop!)
+    (when (ccm/cluster? name) (ccm/remove! name))
+    (ccm/new! name version nodes {:cql port})
+    (ccm/start! name)
+    (ccm/cql! (io/resource keyspace-cql))
+    (doseq [cql schema-cqls]
+      (ccm/cql! (io/resource cql) keyspace))
+    {:contact-points ["127.0.0.1"]
+     :port           (:port config)}))
+
+(defmethod ig/init-key :thimble/cassandra.cluster
+  [_ config]
+  (start-cluster config))
+
+(defmethod ig/halt-key! :thimble/cassandra.cluster
+  [_ _]
+  (ccm/stop!))

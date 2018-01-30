@@ -11,27 +11,30 @@
 
 (defn start
   [config]
-  (let [props         (doto (Properties.)
-                        (.putAll (merge default-config config)))
-        quorum-config (doto (QuorumPeerConfig.)
-                        (.parseProperties props))
-        config        (doto (ServerConfig.)
-                        (.readFrom quorum-config))
+  (let [config        (merge default-config config)
+        props         (doto (Properties.) (.putAll config))
+        quorum-config (doto (QuorumPeerConfig.) (.parseProperties props))
+        server-config (doto (ServerConfig.) (.readFrom quorum-config))
         server        (ZooKeeperServerMain.)]
-    (future (.runFromConfig server config))
+    (deref (future (.runFromConfig server server-config)) 6000 :await)
     {:config config
      :server server}))
 
 (defn stop
-  [{:keys [server]}]
+  [state]
   (let [shutdown (.getDeclaredMethod ZooKeeperServerMain "shutdown" (into-array Class []))]
     (.setAccessible shutdown true)
-    (.invoke shutdown server (into-array []))))
+    (.invoke shutdown (:server state) (into-array []))))
 
-(defmethod ig/init-key :thimble.zookeeper/server
+(defn server-address
+  [state]
+  (let [config (:config state)]
+    (str (get config "clientPortAddress") ":" (get config "clientPort"))))
+
+(defmethod ig/init-key :thimble/zookeeper.server
   [_ config]
   (start config))
 
-(defmethod ig/halt-key! :thimble.zookeeper/server
-  [_ server]
-  (stop server))
+(defmethod ig/halt-key! :thimble/zookeeper.server
+  [_ state]
+  (stop state))

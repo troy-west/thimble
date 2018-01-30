@@ -12,6 +12,7 @@
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
   :dependencies [[org.clojure/clojure "_"]
+                 [com.troy-west/thimble "_"]
                  [com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
                  [com.troy-west/thimble-cassandra "_"]]
@@ -38,6 +39,7 @@
             :versions  {org.clojure/clojure             "1.9.0"
                         org.clojure/tools.logging       "0.4.0"
                         integrant                       "0.6.3"
+                        com.troy-west/thimble           :version
                         com.troy-west/thimble-zookeeper :version
                         com.troy-west/thimble-kafka     :version
                         com.troy-west/thimble-cassandra :version}}
@@ -53,7 +55,7 @@
                   ["vcs" "commit"]
                   ["vcs" "push"]]
 
-  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"] ]}
+  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"]]}
 
   :eastwood {:add-linters [:unused-fn-args
                            :unused-locals
