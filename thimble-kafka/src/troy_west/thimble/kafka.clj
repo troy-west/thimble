@@ -1,10 +1,8 @@
 (ns troy-west.thimble.kafka
-  (:require [troy-west.thimble.zookeeper :as zk]
-            [cheshire.core :as json])
+  (:require [troy-west.thimble.zookeeper :as zk])
   (:import (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.common.serialization StringSerializer)
-           (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
-           (java.net InetSocketAddress)))
+           (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)))
 
 (defn server-address
   [server]
@@ -35,7 +33,5 @@
 
 (defn send-message
   [producer id rating]
-  (let [message (json/encode {:id id :rating rating})
-        record  (ProducerRecord. "talks" id message)]
-    (.send producer record)))
+  (.send producer (ProducerRecord. "talks" id rating)))
 

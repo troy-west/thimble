@@ -12,15 +12,15 @@
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
   :dependencies [[org.clojure/clojure "_"]
+                 [com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
-                 [com.troy-west/thimble-storm "-"]
-                 [com.troy-west/thimble-cassandra "_"]
-                 [com.troy-west/thimble-zookeeper "_"]]
+                 [com.troy-west/thimble-cassandra "_"]]
 
   :profiles {:dev {:resource-paths ["test-resources"]
                    :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
 
   :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
+                                              [org.clojure/tools.logging "_"]
                                               [integrant "_"]]
 
                         :subprocess          nil
@@ -36,11 +36,11 @@
                                               :namespaces  [:source-paths]}}
 
             :versions  {org.clojure/clojure             "1.9.0"
+                        org.clojure/tools.logging       "0.4.0"
                         integrant                       "0.6.3"
+                        com.troy-west/thimble-zookeeper :version
                         com.troy-west/thimble-kafka     :version
-                        com.troy-west/thimble-storm     :version
-                        com.troy-west/thimble-cassandra :version
-                        com.troy-west/thimble-zookeeper :version}}
+                        com.troy-west/thimble-cassandra :version}}
 
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
@@ -53,7 +53,7 @@
                   ["vcs" "commit"]
                   ["vcs" "push"]]
 
-  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"] ["cljfmt" "check"]]}
+  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"] ]}
 
   :eastwood {:add-linters [:unused-fn-args
                            :unused-locals
@@ -61,4 +61,4 @@
                            :unused-private-vars]
              :namespaces  [:source-paths]}
 
-  :pedantic? :ranges)
+  :pedantic? :abort)
