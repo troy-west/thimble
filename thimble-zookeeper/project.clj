@@ -6,4 +6,4 @@
 
   :plugins [[lein-modules "0.3.11"]]
 
-  :dependencies [[org.apache.zookeeper/zookeeper "3.4.10" :exclusions [org.jboss.netty/netty]]])
+  :dependencies [[org.apache.zookeeper/zookeeper "3.4.10" :exclusions [org.slf4j/slf4j-log4j12 org.jboss.netty/netty]]])
