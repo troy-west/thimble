@@ -1,27 +1,31 @@
 (ns troy-west.thimble.kafka
   (:require [troy-west.thimble.zookeeper :as zookeeper]
-            [integrant.core :as ig])
+            [integrant.core :as ig]
+            [clojure.java.io :as io])
   (:import (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
            (java.util Map)))
 
-(def default-broker-config {"log.dir"                          "target/kafka-logs"
-                            "host.name"                        "127.0.0.1"
+(def default-broker-config {"host.name"                        "127.0.0.1"
                             "port"                             "9092"
                             "num.partitions"                   "12"
                             "offsets.topic.replication.factor" "1"})
 
-(def default-producer-config {"value.serializer"  "org.apache.kafka.common.serialization.StringSerializer"
-                              "key.serializer"    "org.apache.kafka.common.serialization.StringSerializer"})
+(def default-producer-config {"value.serializer" "org.apache.kafka.common.serialization.StringSerializer"
+                              "key.serializer"   "org.apache.kafka.common.serialization.StringSerializer"})
 
 (defn start-broker
   [zk-state config]
-  (let [config (assoc (merge default-broker-config config) "zookeeper.connect" (zookeeper/server-address zk-state))
-        broker (KafkaServerStartable. (KafkaConfig. config))]
-    (.startup broker)
-    (Thread/sleep 6000)                                     ;; do better
-    {:config config
-     :broker broker}))
+  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir") "thimble-temp-kf")]
+    (doseq [tmp-file (butlast (reverse (file-seq tmp-dir)))]
+      (io/delete-file tmp-file))
+    (let [config (assoc (merge default-broker-config config)
+                        "zookeeper.connect" (zookeeper/server-address zk-state)
+                        "log.dir" (.getPath tmp-dir))
+          broker (KafkaServerStartable. (KafkaConfig. config))]
+      (.startup broker)
+      {:config config
+       :broker broker})))
 
 (defn stop-broker
   [state]
@@ -41,7 +45,7 @@
 
 (defn send-message
   [state topic key message]
-  (.send (:producer state) (ProducerRecord. topic key message)))
+  (.send ^KafkaProducer (:producer state) (ProducerRecord. topic key message)))
 
 (defmethod ig/init-key :thimble/kafka.broker
   [_ config]

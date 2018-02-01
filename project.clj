@@ -12,13 +12,14 @@
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
   :dependencies [[org.clojure/clojure "_"]
-                 [com.troy-west/thimble "_"]
                  [com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
                  [com.troy-west/thimble-cassandra "_"]]
 
   :profiles {:dev {:resource-paths ["test-resources"]
-                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
+                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]
+                                    [org.slf4j/log4j-over-slf4j "1.7.25"]
+                                    [org.slf4j/slf4j-api "1.7.25"]]}}
 
   :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
                                               [org.clojure/tools.logging "_"]
@@ -39,7 +40,6 @@
             :versions  {org.clojure/clojure             "1.9.0"
                         org.clojure/tools.logging       "0.4.0"
                         integrant                       "0.6.3"
-                        com.troy-west/thimble           :version
                         com.troy-west/thimble-zookeeper :version
                         com.troy-west/thimble-kafka     :version
                         com.troy-west/thimble-cassandra :version}}
@@ -55,7 +55,7 @@
                   ["vcs" "commit"]
                   ["vcs" "push"]]
 
-  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["check"] ["kibit"]]}
+  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["install"] ["check"] ["kibit"]]}
 
   :eastwood {:add-linters [:unused-fn-args
                            :unused-locals

@@ -1,39 +1,49 @@
 (ns troy-west.thimble.zookeeper
-  (:require [integrant.core :as ig])
-  (:import (java.util Properties)
-           (org.apache.zookeeper.server.quorum QuorumPeerConfig)
-           (org.apache.zookeeper.server ServerConfig ZooKeeperServerMain)))
+  (:require [integrant.core :as ig]
+            [clojure.java.io :as io])
+  (:import (org.apache.zookeeper.server ZooKeeperServer ServerCnxnFactory)
+           (org.apache.zookeeper.server.persistence FileTxnSnapLog)))
 
-(def default-config {"dataDir"           "target/zookeeper-data"
-                     "tickTime"          "2000"
-                     "clientPortAddress" "127.0.0.1"
-                     "clientPort"        "2181"})
+(def default-config {"tickTime"          3000
+                     "clientPort"        2181
+                     "maxClientCnxns"    30
+                     "minSessionTimeout" -1
+                     "maxSessionTimeout" -1})
 
 (defn start
   [config]
-  (let [config        (merge default-config config)
-        props         (doto (Properties.) (.putAll config))
-        quorum-config (doto (QuorumPeerConfig.) (.parseProperties props))
-        server-config (doto (ServerConfig.) (.readFrom quorum-config))
-        server        (ZooKeeperServerMain.)]
-    (deref (future (.runFromConfig server server-config)) 6000 :await)
-    {:config config
-     :server server}))
+  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir") "thimble-temp-zk")]
+    (doseq [tmp-file (butlast (reverse (file-seq tmp-dir)))]
+      (io/delete-file tmp-file))
+    (let [config     (merge default-config config)
+          server     (ZooKeeperServer.)
+          tx-log     (FileTxnSnapLog. (io/file tmp-dir) (io/file tmp-dir))
+          cx-factory (ServerCnxnFactory/createFactory (int (get config "clientPort"))
+                                                      (int (get config "maxClientCnxns")))]
+      (.setTickTime server (int (get config "tickTime")))
+      (.setMinSessionTimeout server (int (get config "minSessionTimeout")))
+      (.setMaxSessionTimeout server (int (get config "maxSessionTimeout")))
+      (.setTxnLogFactory server tx-log)
+      (.startup cx-factory server)
+      {:config     config
+       :tx-log     tx-log
+       :cx-factory cx-factory
+       :server     server})))
 
 (defn stop
   [state]
-  (let [shutdown (.getDeclaredMethod ZooKeeperServerMain "shutdown" (into-array Class []))]
-    (.setAccessible shutdown true)
-    (.invoke shutdown (:server state) (into-array []))))
+  (.shutdown ^ZooKeeperServer (:server state) true)
+  (.close ^FileTxnSnapLog (:tx-log state))
+  (.shutdown ^ServerCnxnFactory (:cx-factory state)))
 
 (defn server-address
   [state]
   (let [config (:config state)]
-    (str (get config "clientPortAddress") ":" (get config "clientPort"))))
+    (str "localhost:" (get config "clientPort"))))
 
 (defmethod ig/init-key :thimble/zookeeper.server
   [_ config]
-  (start config))
+  (start (:config config)))
 
 (defmethod ig/halt-key! :thimble/zookeeper.server
   [_ state]
