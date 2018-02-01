@@ -17,13 +17,12 @@
                  [com.troy-west/thimble-cassandra "_"]]
 
   :profiles {:dev {:resource-paths ["test-resources"]
-                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]
-                                    [org.slf4j/log4j-over-slf4j "1.7.25"]
-                                    [org.slf4j/slf4j-api "1.7.25"]]}}
+                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
 
   :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
                                               [org.clojure/tools.logging "_"]
-                                              [integrant "_"]]
+                                              [integrant "_"]
+                                              ]
 
                         :subprocess          nil
 
