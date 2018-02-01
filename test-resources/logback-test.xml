@@ -5,6 +5,7 @@
         </encoder>
     </appender>
 
+    <logger name="kafka" level="INFO"/>
     <logger name="org.apache.kafka" level="INFO"/>
     <logger name="org.apache.zookeeper" level="INFO"/>
     <logger name="org.apache.cassandra" level="INFO"/>

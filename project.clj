@@ -21,8 +21,7 @@
 
   :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
                                               [org.clojure/tools.logging "_"]
-                                              [integrant "_"]
-                                              ]
+                                              [integrant "_"]]
 
                         :subprocess          nil
 
