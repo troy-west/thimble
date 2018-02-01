@@ -28,8 +28,8 @@
        :broker broker})))
 
 (defn stop-broker
-  [state]
-  (.shutdown ^KafkaServerStartable (:broker state)))
+  [broker-state]
+  (.shutdown ^KafkaServerStartable (:broker broker-state)))
 
 (defn start-producer
   [broker-state config]
@@ -40,12 +40,12 @@
      :producer (KafkaProducer. ^Map config)}))
 
 (defn stop-producer
-  [state]
-  (.close ^KafkaProducer (:producer state)))
+  [producer-state]
+  (.close ^KafkaProducer (:producer producer-state)))
 
 (defn send-message
-  [state topic key message]
-  (.send ^KafkaProducer (:producer state) (ProducerRecord. topic key message)))
+  [producer-state topic key message]
+  (.send ^KafkaProducer (:producer producer-state) (ProducerRecord. topic key message)))
 
 (defmethod ig/init-key :thimble/kafka.broker
   [_ config]
@@ -53,8 +53,8 @@
   (start-broker (:zookeeper config) (:config config)))
 
 (defmethod ig/halt-key! :thimble/kafka.broker
-  [_ broker]
-  (stop-broker broker))
+  [_ broker-state]
+  (stop-broker broker-state))
 
 (defmethod ig/init-key :thimble/kafka.producer
   [_ config]
@@ -62,5 +62,5 @@
   (start-producer (:broker config) (:config config)))
 
 (defmethod ig/halt-key! :thimble/kafka.producer
-  [_ broker]
-  (stop-producer broker))
+  [_ producer-state]
+  (stop-producer producer-state))
