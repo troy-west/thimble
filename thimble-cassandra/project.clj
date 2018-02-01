@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-cassandra "0.1.2-SNAPSHOT"
+(defproject com.troy-west/thimble-cassandra "0.1.2"
   :description "Thimble: Apache Cassandra Testing Toolkit"
 
   :license {:name "Eclipse Public License"
