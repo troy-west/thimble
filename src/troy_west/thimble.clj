@@ -6,14 +6,18 @@
             [troy-west.arche.hugcql]
             [integrant.core :as ig]))
 
-(defn init
+(defn start
   ([]
-   (init {:thimble/zookeeper.server  {}
-          :thimble/kafka.broker      {:zookeeper (ig/ref :thimble/zookeeper.server)}
-          :thimble/kafka.producer    {:broker (ig/ref :thimble/kafka.broker)}
-          :thimble/cassandra.cluster {}
-          :arche/cluster             (ig/ref :thimble/cassandra.cluster)
-          :arche/connection          {:cluster  (ig/ref :arche/cluster)
-                                      :keyspace "sandbox"}}))
+   (start {:thimble/zookeeper.server  {}
+           :thimble/kafka.broker      {:zookeeper (ig/ref :thimble/zookeeper.server)}
+           :thimble/kafka.producer    {:broker (ig/ref :thimble/kafka.broker)}
+           :thimble/cassandra.cluster {}
+           :arche/cluster             (ig/ref :thimble/cassandra.cluster)
+           :arche/connection          {:cluster  (ig/ref :arche/cluster)
+                                       :keyspace "sandbox"}}))
   ([config]
    (ig/init config)))
+
+(defn stop
+  [state]
+  (ig/halt! state))
