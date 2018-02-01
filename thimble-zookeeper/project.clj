@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-zookeeper "0.1.4-SNAPSHOT"
+(defproject com.troy-west/thimble-zookeeper "0.1.4"
   :description "Thimble: Apache Zookeeper Testing Toolkit"
 
   :license {:name "Eclipse Public License"
