@@ -9,7 +9,8 @@
 (defn start
   ([]
    (start {:thimble/zookeeper.server  {}
-           :thimble/kafka.broker      {:zookeeper (ig/ref :thimble/zookeeper.server)}
+           :thimble/kafka.broker      {:zookeeper (ig/ref :thimble/zookeeper.server)
+                                       :topics    ["test-topic-1"]}
            :thimble/kafka.producer    {:broker (ig/ref :thimble/kafka.broker)}
            :thimble/cassandra.cluster {}
            :arche/cluster             (ig/ref :thimble/cassandra.cluster)
