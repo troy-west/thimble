@@ -7,7 +7,7 @@
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
            (org.apache.kafka.clients.admin AdminClient NewTopic)))
 
-(def default-broker-config {"host.name"                        "127.0.0.1"
+(def default-broker-config {"host.name"                        "localhost"
                             "port"                             "9092"
                             "num.partitions"                   "12"
                             "default.replication.factor"       "1"
@@ -26,7 +26,8 @@
                         "log.dir" (.getPath tmp-dir))
           broker (KafkaServerStartable. (KafkaConfig. config))]
       (.startup broker)
-      (let [admin-client (AdminClient/create {"bootstrap.servers" "localhost:9092"})]
+      (let [admin-host   (str (get config "host..name") ":" (get config "port"))
+            admin-client (AdminClient/create {"bootstrap.servers" admin-host})]
         (when (seq topics)
           (let [n-parts  (Integer/parseInt (get config "num.partitions"))
                 r-factor (Integer/parseInt (get config "default.replication.factor"))]
