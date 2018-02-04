@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-kafka "0.1.7"
+(defproject com.troy-west/thimble-kafka "0.1.8-SNAPSHOT"
   :description "Thimble: Apache Kafka Testing Toolkit"
 
   :license {:name "Eclipse Public License"
