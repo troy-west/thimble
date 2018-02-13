@@ -91,6 +91,22 @@ platform
 ;; see: thimble/start for an example Integrant configuration, change as required
 ;; see: com.troy-west/arche for details on initializing the Cassandra connection and Prepared Statements
 
+;; the idea being you then start a Kafka Streams topology to compute over a topic and write to Cassandra..
+
+(def a-k-stream
+ (let [builder (KStreamBuilder.)]
+     (-> (.stream builder ^"[Ljava.lang.String;" (into-array String ["test-topic-1"]))
+         (.mapValues (reify ValueMapper
+                       (apply [_ v]
+                         (arche/execute (:arche/connection platform) 
+                                        :a/statement 
+                                        {:values {:a-column v}}))))
+     (let [k-stream (KafkaStreams. builder (StreamsConfig. stream-config))]
+       (.start k-stream)
+       k-stream)))
+      
+;; later
+(.close ^KafkaStreams a-k-stream)
 (thimble/stop platform)
 ```
 
