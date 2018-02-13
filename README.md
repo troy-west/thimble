@@ -49,15 +49,9 @@ platform
                                      "maxClientCnxns" 30,
                                      "minSessionTimeout" -1,
                                      "maxSessionTimeout" -1},
-                            :tx-log #object[org.apache.zookeeper.server.persistence.FileTxnSnapLog
-                                            0x7ca7e10d
-                                            "org.apache.zookeeper.server.persistence.FileTxnSnapLog@7ca7e10d"],
-                            :cx-factory #object[org.apache.zookeeper.server.NIOServerCnxnFactory
-                                                0x332309d6
-                                                "org.apache.zookeeper.server.NIOServerCnxnFactory@332309d6"],
-                            :server #object[org.apache.zookeeper.server.ZooKeeperServer
-                                            0x8560b3e
-                                            "org.apache.zookeeper.server.ZooKeeperServer@8560b3e"]},
+                            :tx-log #object[org.apache.zookeeper.server.persistence.FileTxnSnapLog...],
+                            :cx-factory #object[org.apache.zookeeper.server.NIOServerCnxnFactory...],
+                            :server #object[org.apache.zookeeper.server.ZooKeeperServer...]},
  :thimble/kafka.broker {:config {"host.name" "localhost",
                                  "port" "9092",
                                  "num.partitions" "12",
@@ -65,23 +59,15 @@ platform
                                  "offsets.topic.replication.factor" "1",
                                  "zookeeper.connect" "localhost:2181",
                                  "log.dir" "/var/folders/gz/7g238rvd6j1c_jrqqc87_7_m0000gn/T/thimble-temp-kf"},
-                        :broker #object[kafka.server.KafkaServerStartable
-                                        0x4b3a2cb0
-                                        "kafka.server.KafkaServerStartable@4b3a2cb0"],
-                        :admin-client #object[org.apache.kafka.clients.admin.KafkaAdminClient
-                                              0x598a8fb2
-                                              "org.apache.kafka.clients.admin.KafkaAdminClient@598a8fb2"]},
+                        :broker #object[kafka.server.KafkaServerStartable...],
+                        :admin-client #object[org.apache.kafka.clients.admin.KafkaAdminClient...]},
  :thimble/kafka.producer {:config {"value.serializer" "org.apache.kafka.common.serialization.StringSerializer",
                                    "key.serializer" "org.apache.kafka.common.serialization.StringSerializer",
                                    "bootstrap.servers" "localhost:9092"},
-                          :producer #object[org.apache.kafka.clients.producer.KafkaProducer
-                                            0x72cc50ec
-                                            "org.apache.kafka.clients.producer.KafkaProducer@72cc50ec"]},
+                          :producer #object[org.apache.kafka.clients.producer.KafkaProducer...]},
  :thimble/cassandra.cluster {:contact-points ["127.0.0.1"], :port 19142},
- :arche/cluster #object[com.datastax.driver.core.Cluster 0x4a7baa70 "com.datastax.driver.core.Cluster@4a7baa70"],
- :arche/connection {:session #object[com.datastax.driver.core.SessionManager
-                                     0x4d9fd2ed
-                                     "com.datastax.driver.core.SessionManager@4d9fd2ed"],
+ :arche/cluster #object[com.datastax.driver.core.Cluster...,
+ :arche/connection {:session #object[com.datastax.driver.core.SessionManager...],
                     :statements {},
                     :udt-encoders {}}}
 
@@ -98,6 +84,7 @@ platform
      (-> (.stream builder ^"[Ljava.lang.String;" (into-array String ["test-topic-1"]))
          (.mapValues (reify ValueMapper
                        (apply [_ v]
+                         ;; see: https://github.com/troy-west/arche for details on configuring statements
                          (arche/execute (:arche/connection platform) 
                                         :a/statement 
                                         {:values {:a-column v}}))))
