@@ -18,6 +18,8 @@ A Clojure toolkit for testing Streaming Data Platforms
 
 * [com.troy-west.arche/thimble-kafka](https://github.com/troy-west/thimble/tree/master/thimble-kafka)
 
+  [![Clojars Project](https://img.shields.io/clojars/v/com.troy-west/thimble-kafka.svg)](https://clojars.org/com.troy-west/thimble-kafka)
+  
   Initialize and interact with Kafka from the REPL
 
 * [com.troy-west.arche/thimble-cassandra](https://github.com/troy-west/thimble/tree/master/thimble-cassandra)
