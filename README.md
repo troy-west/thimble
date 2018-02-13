@@ -66,7 +66,7 @@ platform
                                    "bootstrap.servers" "localhost:9092"},
                           :producer #object[org.apache.kafka.clients.producer.KafkaProducer...]},
  :thimble/cassandra.cluster {:contact-points ["127.0.0.1"], :port 19142},
- :arche/cluster #object[com.datastax.driver.core.Cluster...,
+ :arche/cluster #object[com.datastax.driver.core.Cluster...,],
  :arche/connection {:session #object[com.datastax.driver.core.SessionManager...],
                     :statements {},
                     :udt-encoders {}}}
