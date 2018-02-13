@@ -1,6 +1,8 @@
 (defproject com.troy-west/thimble-zookeeper "0.1.8-SNAPSHOT"
   :description "Thimble: Apache Zookeeper Testing Toolkit"
 
+  :url "https://github.com/troy-west/thimble"
+  
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
