@@ -5,7 +5,7 @@
   (:import (java.util Map)
            (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
-           (org.apache.kafka.clients.admin AdminClient NewTopic)))
+           (org.apache.kafka.clients.admin AdminClient NewTopic KafkaAdminClient)))
 
 (def default-broker-config {"host.name"                        "localhost"
                             "port"                             "9092"
@@ -40,7 +40,8 @@
 
 (defn stop-broker
   [broker-state]
-  (.shutdown ^KafkaServerStartable (:broker broker-state)))
+  (.shutdown ^KafkaServerStartable (:broker broker-state))
+  (.close ^KafkaAdminClient (:admin-client broker-state)))
 
 (defn start-producer
   [broker-state config]
