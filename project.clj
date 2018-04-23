@@ -27,7 +27,15 @@
 
                         :deploy-repositories [["releases" {:url "https://clojars.org/repo/" :creds :gpg}]]
 
-                        :aliases             {"puff" ["do" ["clean"] ["install"] ["deps"] ["check"] ["test"] ["kibit"] ["cljfmt" "check"]]}
+                        :aliases             {"puff" ["do"
+                                                      ["clean"]
+                                                      ["install"]
+                                                      ["deps"]
+                                                      ["check"]
+                                                      ["test"]
+                                                      ["kibit"]
+                                                      ["eastwood"]
+                                                      ["cljfmt" "check"]]}
 
                         :eastwood            {:add-linters [:unused-fn-args
                                                             :unused-locals
@@ -54,12 +62,6 @@
                   ["vcs" "commit"]
                   ["vcs" "push"]]
 
-  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["install"] ["check"] ["kibit"]]}
-
-  :eastwood {:add-linters [:unused-fn-args
-                           :unused-locals
-                           :unused-namespaces
-                           :unused-private-vars]
-             :namespaces  [:source-paths]}
+  :aliases {"smoke" ["do" ["modules" "puff"] ["clean"] ["install"] ["check"] ["kibit"] ["cljfmt" "check"]]}
 
   :pedantic? :abort)

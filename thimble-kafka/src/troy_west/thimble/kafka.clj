@@ -27,7 +27,7 @@
           broker (KafkaServerStartable. (KafkaConfig. config))]
       (.startup broker)
       (let [admin-host   (str (get config "host..name") ":" (get config "port"))
-            admin-client (AdminClient/create {"bootstrap.servers" admin-host})]
+            admin-client ^AdminClient (AdminClient/create {"bootstrap.servers" admin-host})]
         (when (seq topics)
           (let [n-parts  (Integer/parseInt (get config "num.partitions"))
                 r-factor (Integer/parseInt (get config "default.replication.factor"))]
