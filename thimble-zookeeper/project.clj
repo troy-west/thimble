@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-zookeeper "0.1.9"
+(defproject com.troy-west/thimble-zookeeper "0.1.10-SNAPSHOT"
   :description "Thimble: Apache Zookeeper Testing Toolkit"
 
   :url "https://github.com/troy-west/thimble"
