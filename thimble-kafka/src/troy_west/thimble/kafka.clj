@@ -21,8 +21,9 @@
                               "key.deserializer"   "org.apache.kafka.common.serialization.StringDeserializer"})
 
 (defn start-broker
-  [zk-state topics config]
-  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir") "thimble-temp-kf")]
+  [zk-state topics tmp-dir config]
+  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir")
+                         (or tmp-dir "thimble-temp-kf"))]
     (doseq [tmp-file (butlast (reverse (file-seq tmp-dir)))]
       (io/delete-file tmp-file))
     (let [config (assoc (merge default-broker-config config)
@@ -80,9 +81,9 @@
   (.get (.names (.listTopics ^AdminClient (:admin-client broker-state)))))
 
 (defmethod ig/init-key :thimble/kafka.broker
-  [_ config]
-  (assert (:zookeeper config))
-  (start-broker (:zookeeper config) (:topics config) (:config config)))
+  [_ {:keys [zookeeper topics tmp-dir config]}]
+  (assert zookeeper)
+  (start-broker zookeeper topics tmp-dir config))
 
 (defmethod ig/halt-key! :thimble/kafka.broker
   [_ broker-state]
