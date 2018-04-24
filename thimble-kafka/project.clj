@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-kafka "0.1.9-SNAPSHOT"
+(defproject com.troy-west/thimble-kafka "0.1.9"
   :description "Thimble: Apache Kafka Testing Toolkit"
 
   :url "https://github.com/troy-west/thimble"
