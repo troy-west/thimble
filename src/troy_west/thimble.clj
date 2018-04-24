@@ -12,6 +12,9 @@
            :thimble/kafka.broker      {:zookeeper (ig/ref :thimble/zookeeper.server)
                                        :topics    ["test-topic-1"]}
            :thimble/kafka.producer    {:broker (ig/ref :thimble/kafka.broker)}
+           :thimble/kafka.consumer    {:broker (ig/ref :thimble/kafka.broker)
+                                       :config {"group.id"           "test"
+                                                "enable.auto.commit" "true"}}
            :thimble/cassandra.cluster {}
            :arche/cluster             (ig/ref :thimble/cassandra.cluster)
            :arche/connection          {:cluster  (ig/ref :arche/cluster)

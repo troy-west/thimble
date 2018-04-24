@@ -5,6 +5,7 @@
   (:import (java.util Map)
            (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
+           (org.apache.kafka.clients.consumer KafkaConsumer)
            (org.apache.kafka.clients.admin AdminClient NewTopic KafkaAdminClient)))
 
 (def default-broker-config {"host.name"                        "localhost"
@@ -15,6 +16,9 @@
 
 (def default-producer-config {"value.serializer" "org.apache.kafka.common.serialization.StringSerializer"
                               "key.serializer"   "org.apache.kafka.common.serialization.StringSerializer"})
+
+(def default-consumer-config {"value.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
+                              "key.deserializer"   "org.apache.kafka.common.serialization.StringDeserializer"})
 
 (defn start-broker
   [zk-state topics config]
@@ -55,6 +59,18 @@
   [producer-state]
   (.close ^KafkaProducer (:producer producer-state)))
 
+(defn start-consumer
+  [broker-state config]
+  (let [broker-config  (:config broker-state)
+        broker-address (str (get broker-config "host.name") ":" (get broker-config "port"))
+        config         (assoc (merge default-consumer-config config) "bootstrap.servers" broker-address)]
+    {:config   config
+     :consumer (KafkaConsumer. ^Map config)}))
+
+(defn stop-consumer
+  [consumer-state]
+  (.close ^KafkaConsumer (:consumer consumer-state)))
+
 (defn send-message
   [producer-state topic key message]
   (.send ^KafkaProducer (:producer producer-state) (ProducerRecord. topic key message)))
@@ -80,3 +96,12 @@
 (defmethod ig/halt-key! :thimble/kafka.producer
   [_ producer-state]
   (stop-producer producer-state))
+
+(defmethod ig/init-key :thimble/kafka.consumer
+  [_ config]
+  (assert (:broker config))
+  (start-consumer (:broker config) (:config config)))
+
+(defmethod ig/halt-key! :thimble/kafka.consumer
+  [_ consumer-state]
+  (stop-consumer consumer-state))
