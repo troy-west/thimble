@@ -20,28 +20,29 @@
 (def default-consumer-config {"value.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
                               "key.deserializer"   "org.apache.kafka.common.serialization.StringDeserializer"})
 
+(defn empty-dir!
+  [dir]
+  (doseq [tmp-file (butlast (reverse (file-seq dir)))]
+    (io/delete-file tmp-file)))
+
 (defn start-broker
-  [zk-state topics tmp-dir config]
-  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir")
-                         (or tmp-dir "thimble-temp-kf"))]
-    (doseq [tmp-file (butlast (reverse (file-seq tmp-dir)))]
-      (io/delete-file tmp-file))
-    (let [config (assoc (merge default-broker-config config)
-                        "zookeeper.connect" (zookeeper/server-address zk-state)
-                        "log.dir" (.getPath tmp-dir))
-          broker (KafkaServerStartable. (KafkaConfig. config))]
-      (.startup broker)
-      (let [admin-host   (str (get config "host..name") ":" (get config "port"))
-            admin-client ^AdminClient (AdminClient/create {"bootstrap.servers" admin-host})]
-        (when (seq topics)
-          (let [n-parts  (Integer/parseInt (get config "num.partitions"))
-                r-factor (Integer/parseInt (get config "default.replication.factor"))]
-            (.get (.all (.createTopics admin-client
-                                       (map #(NewTopic. %1 n-parts r-factor)
-                                            topics))))))
-        {:config       config
-         :broker       broker
-         :admin-client admin-client}))))
+  [zk-state topics dir config]
+  (let [config (assoc (merge default-broker-config config)
+                      "zookeeper.connect" (zookeeper/server-address zk-state)
+                      "log.dir" (.getAbsolutePath dir))
+        broker (KafkaServerStartable. (KafkaConfig. config))]
+    (.startup broker)
+    (let [admin-host   (str (get config "host..name") ":" (get config "port"))
+          admin-client ^AdminClient (AdminClient/create {"bootstrap.servers" admin-host})]
+      (when (seq topics)
+        (let [n-parts  (Integer/parseInt (get config "num.partitions"))
+              r-factor (Integer/parseInt (get config "default.replication.factor"))]
+          (.get (.all (.createTopics admin-client
+                                     (map #(NewTopic. %1 n-parts r-factor)
+                                          topics))))))
+      {:config       config
+       :broker       broker
+       :admin-client admin-client})))
 
 (defn stop-broker
   [broker-state]
@@ -81,9 +82,18 @@
   (.get (.names (.listTopics ^AdminClient (:admin-client broker-state)))))
 
 (defmethod ig/init-key :thimble/kafka.broker
-  [_ {:keys [zookeeper topics tmp-dir config]}]
+  [_ {:keys [zookeeper topics tmp-dir dir config]}]
   (assert zookeeper)
-  (start-broker zookeeper topics tmp-dir config))
+  (start-broker zookeeper topics
+                (if (seq dir)
+                  (let [dir (io/file dir)]
+                    (.mkdirs dir)
+                    dir)
+                  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir")
+                                         (or tmp-dir "thimble-temp-kf"))]
+                    (empty-dir! tmp-dir)
+                    tmp-dir))
+                config))
 
 (defmethod ig/halt-key! :thimble/kafka.broker
   [_ broker-state]
