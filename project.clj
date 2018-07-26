@@ -11,17 +11,17 @@
             [jonase/eastwood "0.2.9" :exclusions [org.clojure/clojure]]
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
-  :dependencies [[org.clojure/clojure "_"]
-                 [com.troy-west/thimble-zookeeper "_"]
+  :dependencies [[com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
                  [com.troy-west/thimble-cassandra "_"]]
 
-  :profiles {:dev {:resource-paths ["test-resources"]
-                   :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}}
+  :profiles {:dev      {:resource-paths ["test-resources"]
+                        :dependencies   [[ch.qos.logback/logback-classic "1.2.3"]]}
 
-  :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]
-                                              [org.clojure/tools.logging "_"]
-                                              [integrant "_"]]
+             :provided {:dependencies [[org.clojure/tools.logging "_"]
+                                       [integrant "_"]]}}
+
+  :modules {:inherited {:dependencies        [[org.clojure/clojure "_"]]
 
                         :subprocess          nil
 
@@ -44,7 +44,7 @@
                                               :namespaces  [:source-paths]}}
 
             :versions  {org.clojure/clojure             "1.9.0"
-                        org.clojure/tools.logging       "0.4.0"
+                        org.clojure/tools.logging       "0.4.1"
                         integrant                       "0.6.3"
                         com.troy-west/thimble-zookeeper :version
                         com.troy-west/thimble-kafka     :version
