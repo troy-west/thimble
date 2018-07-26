@@ -3,6 +3,7 @@
             [troy-west.thimble.zookeeper :as zookeeper]
             [integrant.core :as ig])
   (:import (java.util Map)
+           (java.io File)
            (kafka.server KafkaServerStartable KafkaConfig)
            (org.apache.kafka.clients.producer KafkaProducer ProducerRecord)
            (org.apache.kafka.clients.consumer KafkaConsumer)
@@ -23,17 +24,18 @@
 (defn empty-dir!
   [dir]
   (doseq [tmp-file (butlast (reverse (file-seq dir)))]
-    (io/delete-file tmp-file)))
+    (io/delete-file tmp-file))
+  dir)
 
 (defn start-broker
   [zk-state topics dir config]
   (let [config (assoc (merge default-broker-config config)
                       "zookeeper.connect" (zookeeper/server-address zk-state)
-                      "log.dir" (.getAbsolutePath dir))
+                      "log.dir" (.getAbsolutePath ^File dir))
         broker (KafkaServerStartable. (KafkaConfig. config))]
     (.startup broker)
-    (let [admin-host   (str (get config "host..name") ":" (get config "port"))
-          admin-client ^AdminClient (AdminClient/create {"bootstrap.servers" admin-host})]
+    (let [admin-host   (str (get config "host.name") ":" (get config "port"))
+          admin-client ^AdminClient (AdminClient/create ^Map {"bootstrap.servers" admin-host})]
       (when (seq topics)
         (let [n-parts  (Integer/parseInt (get config "num.partitions"))
               r-factor (Integer/parseInt (get config "default.replication.factor"))]
@@ -82,18 +84,16 @@
   (.get (.names (.listTopics ^AdminClient (:admin-client broker-state)))))
 
 (defmethod ig/init-key :thimble/kafka.broker
-  [_ {:keys [zookeeper topics tmp-dir dir config]}]
+  [_ {:keys [zookeeper topics dir config]}]
   (assert zookeeper)
-  (start-broker zookeeper topics
-                (if (seq dir)
-                  (let [dir (io/file dir)]
-                    (.mkdirs dir)
-                    dir)
-                  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir")
-                                         (or tmp-dir "thimble-temp-kf"))]
-                    (empty-dir! tmp-dir)
-                    tmp-dir))
-                config))
+  (let [dir (if-not dir
+              (-> (System/getProperty "java.io.tmpdir")
+                  (io/file "thimble-temp-kf")
+                  empty-dir!)
+              (let [dir (io/file dir)]
+                (.mkdirs dir)
+                dir))]
+    (start-broker zookeeper topics dir config)))
 
 (defmethod ig/halt-key! :thimble/kafka.broker
   [_ broker-state]

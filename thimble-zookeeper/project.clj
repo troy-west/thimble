@@ -1,5 +1,5 @@
 (defproject com.troy-west/thimble-zookeeper "0.1.10-SNAPSHOT"
-  :description "Thimble: Apache Zookeeper Testing Toolkit"
+  :description "Thimble: Apache Zookeeper Toolkit"
 
   :url "https://github.com/troy-west/thimble"
   
@@ -8,6 +8,6 @@
 
   :plugins [[lein-modules "0.3.11"]]
 
-  :dependencies [[org.apache.zookeeper/zookeeper "3.4.10" :exclusions [org.slf4j/slf4j-api
+  :dependencies [[org.apache.zookeeper/zookeeper "3.4.13" :exclusions [org.slf4j/slf4j-api
                                                                        org.slf4j/slf4j-log4j12
                                                                        org.jboss.netty/netty]]])
