@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-all "0.1.11"
+(defproject com.troy-west/thimble-all "0.1.12-SNAPSHOT"
   :description "Thimble: A Clojure toolkit for testing Streaming Data Platforms"
 
   :url "https://github.com/troy-west/thimble"

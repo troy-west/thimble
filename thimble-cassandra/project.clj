@@ -1,4 +1,4 @@
-(defproject com.troy-west/thimble-cassandra "0.1.11"
+(defproject com.troy-west/thimble-cassandra "0.1.12-SNAPSHOT"
   :description "Thimble: Apache Cassandra Toolkit"
 
   :url "https://github.com/troy-west/thimble"
