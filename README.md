@@ -4,25 +4,25 @@ A Clojure toolkit for testing Streaming Data Platforms
 
 ## Modules
 
-* [com.troy-west.arche/thimble-all](https://github.com/troy-west/thimble)
+* [com.troy-west/thimble-all](https://github.com/troy-west/thimble)
 
   [![Clojars Project](https://img.shields.io/clojars/v/com.troy-west/thimble-all.svg)](https://clojars.org/com.troy-west/thimble-all)
 
   Initialize and interact with a streaming data platform (Zookeeper, Kafka, Cassandra) from the REPL
 
-* [com.troy-west.arche/thimble-zookeeper](https://github.com/troy-west/thimble/tree/master/thimble-zookeeper)
+* [com.troy-west/thimble-zookeeper](https://github.com/troy-west/thimble/tree/master/thimble-zookeeper)
 
   [![Clojars Project](https://img.shields.io/clojars/v/com.troy-west/thimble-zookeeper.svg)](https://clojars.org/com.troy-west/thimble-zookeeper)
 
   Initialize Zookeeper from the REPL 
 
-* [com.troy-west.arche/thimble-kafka](https://github.com/troy-west/thimble/tree/master/thimble-kafka)
+* [com.troy-west/thimble-kafka](https://github.com/troy-west/thimble/tree/master/thimble-kafka)
 
   [![Clojars Project](https://img.shields.io/clojars/v/com.troy-west/thimble-kafka.svg)](https://clojars.org/com.troy-west/thimble-kafka)
   
   Initialize and interact with Kafka from the REPL
 
-* [com.troy-west.arche/thimble-cassandra](https://github.com/troy-west/thimble/tree/master/thimble-cassandra)
+* [com.troy-west/thimble-cassandra](https://github.com/troy-west/thimble/tree/master/thimble-cassandra)
 
   [![Clojars Project](https://img.shields.io/clojars/v/com.troy-west/thimble-cassandra.svg)](https://clojars.org/com.troy-west/thimble-cassandra)
 
