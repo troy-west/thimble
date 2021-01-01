@@ -7,9 +7,10 @@
             :url  "http://www.eclipse.org/legal/epl-v20.html"}
 
   :plugins [[lein-modules "0.3.11"]
-            [lein-cljfmt "0.6.0" :exclusions [org.clojure/clojure]]
-            [jonase/eastwood "0.2.9" :exclusions [org.clojure/clojure]]
-            [lein-kibit "0.1.6" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
+            [lein-cljfmt "0.7.0" :exclusions [org.clojure/clojure
+                                              com.google.errorprone/error_prone_annotations
+                                              com.google.code.findbugs/jsr305]]
+            [lein-kibit "0.1.8" :exclusions [org.clojure/clojure org.clojure/tools.reader]]]
 
   :dependencies [[com.troy-west/thimble-zookeeper "_"]
                  [com.troy-west/thimble-kafka "_"]
@@ -34,18 +35,11 @@
                                                       ["check"]
                                                       ["test"]
                                                       ["kibit"]
-                                                      ["eastwood"]
-                                                      ["cljfmt" "check"]]}
+                                                      ["cljfmt" "check"]]}}
 
-                        :eastwood            {:add-linters [:unused-fn-args
-                                                            :unused-locals
-                                                            :unused-namespaces
-                                                            :unused-private-vars]
-                                              :namespaces  [:source-paths]}}
-
-            :versions  {org.clojure/clojure             "1.9.0"
-                        org.clojure/tools.logging       "0.4.1"
-                        integrant                       "0.6.3"
+            :versions  {org.clojure/clojure             "1.10.1"
+                        org.clojure/tools.logging       "1.1.0"
+                        integrant                       "0.8.0"
                         com.troy-west/thimble-zookeeper :version
                         com.troy-west/thimble-kafka     :version
                         com.troy-west/thimble-cassandra :version}}

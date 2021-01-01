@@ -1,7 +1,8 @@
 (ns troy-west.thimble.kafka
   (:require [clojure.java.io :as io]
             [troy-west.thimble.zookeeper :as zookeeper]
-            [integrant.core :as ig])
+            [integrant.core :as ig]
+            [clojure.tools.logging :as log])
   (:import (java.util Map)
            (java.io File)
            (kafka.server KafkaServerStartable KafkaConfig)
@@ -38,10 +39,11 @@
           admin-client ^AdminClient (AdminClient/create ^Map {"bootstrap.servers" admin-host})]
       (when (seq topics)
         (let [n-parts  (Integer/parseInt (get config "num.partitions"))
-              r-factor (Integer/parseInt (get config "default.replication.factor"))]
-          (.get (.all (.createTopics admin-client
-                                     (map #(NewTopic. %1 n-parts r-factor)
-                                          topics))))))
+              r-factor (Short/parseShort (get config "default.replication.factor"))]
+          (try
+            (.get (.all (.createTopics admin-client (map #(NewTopic. ^String %1 n-parts r-factor) topics))))
+            (catch Exception ex
+              (log/error ex "Error creating topic")))))
       {:config       config
        :broker       broker
        :admin-client admin-client})))
